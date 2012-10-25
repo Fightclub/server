@@ -1,3 +1,9 @@
+from sys import path
+from os.path import abspath, dirname
+
+PROJECT_ROOT = dirname(dirname(abspath(__file__)))
+path.append(PROJECT_ROOT + '/apps')
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
