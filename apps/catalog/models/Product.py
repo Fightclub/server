@@ -12,3 +12,6 @@ class Product(models.Model):
   category = models.ManyToManyField(ProductCategory)
   icon     = models.URLField()
   vendor   = models.ForeignKey("Vendor")
+
+  def __unicode__(self):
+    return self.sku
