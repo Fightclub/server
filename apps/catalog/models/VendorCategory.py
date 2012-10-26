@@ -6,3 +6,6 @@ class VendorCategory(models.Model):
   
   name   = models.CharField(max_length=128)
   icon   = models.URLField()
+
+  def __unicode__(self):
+    return self.name

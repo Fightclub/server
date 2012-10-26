@@ -10,3 +10,6 @@ class Vendor(models.Model):
   category = models.ManyToManyField(VendorCategory)
   icon     = models.URLField()
   website  = models.URLField()
+
+  def __unicode__(self):
+    return self.name

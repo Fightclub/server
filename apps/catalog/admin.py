@@ -1,4 +1,4 @@
 from django.contrib import admin
-from apps.catalog.models import Product
+from apps.catalog.models import *
 
-admin.site.register(Product)
+admin.site.register([Product, ProductCategory, Vendor, VendorCategory])
