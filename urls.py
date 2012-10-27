@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'fightclub.views.home', name='home'),
     # url(r'^fightclub/', include('fightclub.foo.urls')),
+    url(r'^catalog/', include('apps.catalog.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
