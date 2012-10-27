@@ -9,16 +9,13 @@ def ProductCategoryJson(request):
   if data.get("id", None):
     try:
       productCategory = ProductCategory.objects.get(id=data.get("id", None))
-    except:
-      productCategory = None
 
-    if productCategory:
-      productCategoryInfo["name"] = productCategory.name
-      productCategoryInfo["icon"] = productCategory.icon
-
+      productCategoryInfo = productCategory.to_dict()
       productCategoryInfo["products"] = []
       for product in productCategory.product_set.all():
-        productCategoryInfo["products"].append(product.id)
+        productCategoryInfo["products"].append(product.to_dict(["id", "name"]))
+    except:
+      productCategoryInfo = {}
 
   return HttpResponse(json.dumps(productCategoryInfo))
 
