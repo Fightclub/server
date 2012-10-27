@@ -8,24 +8,10 @@ def ProductJson(request):
   productInfo = {}
   if data.get("id", None):
     try:
-      product = Product.objects.get(id=data.get("id", None))
+      productInfo = Product.objects.get(id=data.get("id", None)).to_dict()
     except:
-      product = None
-
-    if product:
-      productInfo["name"] = product.name
-      productInfo["sku"] = product.sku
-      productInfo["price"] = float(product.price)
-      productInfo["description"] = product.descr
-      productInfo["icon"] = product.icon
-      productInfo["vendorid"] = product.vendor.id
-
-      productInfo["categories"] = []
-      for category in product.category.all():
-        productInfo["categories"].append(category.id)
-
+      productInfo = {}
   return HttpResponse(json.dumps(productInfo))
 
 def ProductHtml(request):
   return HttpResponse("Product Html")
-
