@@ -1,1 +1,3 @@
-from SimpleTest import SimpleTest
+from Product import *
+from ProductCategory import *
+from Vendor import *

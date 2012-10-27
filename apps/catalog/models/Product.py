@@ -27,8 +27,8 @@ class Product(models.Model):
       productInfo["description"] = self.descr
     if not fields or "icon" in fields:
       productInfo["icon"] = self.icon
-    if not fields or "vendorid" in fields:
-      productInfo["vendorid"] = self.vendor.to_dict(["id", "name"])
+    if not fields or "vendor" in fields:
+      productInfo["vendor"] = self.vendor.to_dict(["id", "name"])
     
     if not fields or "category" in fields:
       productInfo["categories"] = []
