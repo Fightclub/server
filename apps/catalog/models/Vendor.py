@@ -23,6 +23,12 @@ class Vendor(models.Model):
       vendorInfo["icon"] = self.icon
     if not fields or "website" in fields:
       vendorInfo["website"] = self.website
+
+    if not fields or "products" in fields:
+      vendorInfo["products"] = []
+      for product in self.product_set.all():
+        vendorInfo["products"].append(product.to_dict(["id", "name", "icon"]))
+
     return vendorInfo
 
   def __unicode__(self):

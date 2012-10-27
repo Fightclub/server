@@ -13,7 +13,7 @@ def ProductCategoryJson(request):
       productCategoryInfo = productCategory.to_dict()
       productCategoryInfo["products"] = []
       for product in productCategory.product_set.all():
-        productCategoryInfo["products"].append(product.to_dict(["id", "name"]))
+        productCategoryInfo["products"].append(product.to_dict(["id", "name", "icon"]))
     except:
       productCategoryInfo = {}
 
