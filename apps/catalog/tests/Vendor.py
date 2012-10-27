@@ -41,4 +41,4 @@ class VendorTest(TestCase):
 
   def test_view_vendor_json(self):
     response = self.c.get('/catalog/a/vendor', {'id': 1})
-    self.assertEqual(response.content, "{\"website\": \"test vendor website\", \"description\": \"Test vendor description\", \"icon\": \"test vendor icon\", \"id\": 1, \"name\": \"Test Vendor\"}")
+    self.assertEqual(response.content, "{\"website\": \"test vendor website\", \"description\": \"Test vendor description\", \"name\": \"Test Vendor\", \"products\": [{\"icon\": \"product icon\", \"id\": 1, \"name\": \"Test Product\"}], \"id\": 1, \"icon\": \"test vendor icon\"}")
