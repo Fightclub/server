@@ -8,20 +8,9 @@ def VendorJson(request):
   vendorInfo = {}
   if data.get("id", None):
     try:
-      vendor = Vendor.objects.get(id=data.get("id", None))
+      vendorInfo = Vendor.objects.get(id=data.get("id")).to_dict()
     except:
-      vendor = None
-
-    if vendor:
-      vendorInfo["name"] = vendor.name
-      vendorInfo["description"] = vendor.descr
-      vendorInfo["icon"] = vendor.icon
-      vendorInfo["website"] = vendor.website
-
-      vendorInfo["categories"] = []
-      for category in vendor.category.all():
-        vendorInfo["categories"].append(category.id)
-
+      vendorInfo = {}
   return HttpResponse(json.dumps(vendorInfo))
 
 def VendorHtml(request):
