@@ -16,3 +16,6 @@ class StarbucksCardTest(TestCase):
   def test_model_starbucks_login(self):
     self.assertEqual(StarbucksCard.StarbucksLogin(), True)
 
+  def test_model_starbucks_RetrieveValue(self):
+    self.assertEqual(self.testCard.RetrieveBalance(), 0.0)
+
