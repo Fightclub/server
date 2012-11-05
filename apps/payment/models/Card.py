@@ -16,5 +16,8 @@ class Card(models.Model):
   def RetrieveBalance(self):
     raise NotImplementedError("RetrieveBalance not implemented")
 
+  def SetBalance(self, value):
+    raise NotImplementedError("SetBalance not implemented")
+
   def __unicode__(self):
     raise NotImplementedError("__unicode__ not implemented")

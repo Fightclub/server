@@ -9,9 +9,13 @@ from bs4 import BeautifulSoup
 class StarbucksCard(Card):
   username = os.environ.get("FC_STARBUCKS_USERNAME")
   password = os.environ.get("FC_STARBUCKS_PASSWORD")
+  masterID = os.environ.get("FC_STARBUCKS_MASTERID")
 
   cardManagerURL = "https://www.starbucks.com/account/card"
-  browser = mechanize.Browser()
+  transferFundsURL = "https://www.starbucks.com/account/card/transfer"
+  browser = mechanize.Browser(
+      factory=mechanize.DefaultFactory(i_want_broken_xhtml_support=True)
+      )
 
   @staticmethod
   def StarbucksLogin():
@@ -35,19 +39,47 @@ class StarbucksCard(Card):
 
   @staticmethod
   def StarbucksBalance(cardID):
-    try:
-      StarbucksCard.StarbucksLogin()
-      cardManagerResponse = StarbucksCard.browser.open(StarbucksCard.cardManagerURL)
+    StarbucksCard.StarbucksLogin()
+    cardManagerResponse = StarbucksCard.browser.open(StarbucksCard.cardManagerURL)
+    StarbucksCard.browser.select_form(nr=0)
+    selectedCardResponse = StarbucksCard.browser.submit(cardID)
+    parser = BeautifulSoup(selectedCardResponse.read())
+    balanceSpan = parser.findAll('span', attrs={'class':'balance numbers'})
+    return float(str(balanceSpan[0].findAll(text=True)[0])[1:])
+
+  @staticmethod
+  def TransferFunds(fromCard, toCard, amount):
+    StarbucksCard.StarbucksLogin()
+    fromAmount = StarbucksCard.StarbucksBalance(fromCard)
+    if amount > fromAmount:
+      print "no sufficient funds"
+      raise Exception("Card does not have sufficient funds")
+    else:
+      transferOriginResponse = StarbucksCard.browser.open(StarbucksCard.transferFundsURL)
       StarbucksCard.browser.select_form(nr=0)
-      selectedCardResponse = StarbucksCard.browser.submit(cardID)
-      parser = BeautifulSoup(selectedCardResponse.read())
-      balanceSpan = parser.findAll('span', attrs={'class':'balance numbers'})
-      return float(str(balanceSpan[0].findAll(text=True)[0])[1:])
-    except:
-      return -1.0
+      selectedCardResponse = StarbucksCard.browser.submit(fromCard)
+      transferOriginResponse = StarbucksCard.browser.open(StarbucksCard.transferFundsURL)
+      StarbucksCard.browser.select_form(nr=1)
+      transferFromResponse = StarbucksCard.browser.submit(name="TransferFrom")
+      StarbucksCard.browser.select_form(nr=1)
+      StarbucksCard.browser["TransferFrom.ExistingCardId"] = [toCard]
+      transferToResponse = StarbucksCard.browser.submit()
+      StarbucksCard.browser.select_form(nr=1)
+      StarbucksCard.browser["TransferFrom.TransferAmount"] = str(amount)
+      previewResponse = StarbucksCard.browser.submit()
+      StarbucksCard.browser.select_form(nr=1)
+      transferResponse = StarbucksCard.browser.submit()
 
   def RetrieveBalance(self):
     return StarbucksCard.StarbucksBalance(self.cardID)
+
+  def SetBalance(self, balance):
+    currentBalance = self.RetrieveBalance()
+    if currentBalance < balance:
+      StarbucksCard.TransferFunds(StarbucksCard.masterID, self.cardID, balance-currentBalance)
+    elif currentBalance > balance:
+      StarbucksCard.TransferFunds(self.cardID, StarbucksCard.masterID, currentBalance-balance)
+    self.balance = balance
 
   def __unicode__(self):
     return "%s: %s" % (self.vendor.name, self.cardID)
