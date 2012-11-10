@@ -8,32 +8,20 @@ from apps.network.models import User
 def NewUserJson(request):
   data = request.GET
   userInfo = {}
-  email = data.get("email", None)
-  fbemail = data.get("fbemail", None)
-  first = data.get("first", None)
-  last = data.get("last", None)
-  bday = data.get("bday", None)
-  password = data.get("password", None)
+  userData = {                          
+      "email": data.get("email", None), 
+      "first": data.get("first", None), 
+      "last": data.get("last", None),
+      "password": data.get("password", None),
+      "fbemail": data.get("fbemail", None),
+      "bday": data.get("bday", None),
+    }
 
-  if email and first and last and password:
-    if not DJUser.objects.filter(email=email):
-      if not fbemail or not User.objects.filter(fbemail=fbemail):
-        try:
-          newDJUser = DJUser(username=email, first_name=first, last_name=last, email=email)
-          newDJUser.set_password(password)
-          newDJUser.save()
-          newUser = User.objects.get(user=newDJUser)
-          newUser.bday = bday
-          newUser.fbemail = fbemail
-          newUser.apikey = newUser.generate_apikey()
-          newUser.save()
-          userInfo = newUser.to_dict()
-        except:
-          userInfo = {}
-      else:
-        userInfo = {"error": "Facebook account already associated"}
-    else:
-      userInfo = {"error": "Email already used"}
+  try:
+    newUser = User.create(userData)
+    userInfo = newUser.to_dict()
+  except Exception, err:
+    userInfo = {"error": str(err)}
   return HttpResponse(json.dumps(userInfo, cls=DjangoJSONEncoder))
 
 def UserLoginJson(request):
