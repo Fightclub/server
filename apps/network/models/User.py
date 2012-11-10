@@ -13,15 +13,41 @@ class User(models.Model):
   fbemail  = models.EmailField(unique=True, null=True, blank=True)
   apikey   = models.CharField(max_length=40)
 
+  @classmethod
+  def select(cls, email=None, fbemail=None, id=None, apikey=None):
+    user = None
+    if id:
+      try:
+        user = cls.objects.get(id=id)
+      except:
+        pass
+    elif apikey:
+      try:
+        user = cls.objects.get(apikey=apikey)
+      except:
+        pass
+    elif email:
+      try:
+        djuser = DJUser.objects.get(email=email)
+        user = cls.objects.get(user=djuser)
+      except:
+        pass
+    elif fbemail:
+      try:
+        user = cls.objects.get(fbemail=fbemail)
+      except:
+        pass
+    return user
+
   def generate_apikey(self):
     salt = sha.new(str(random.random())).hexdigest()[:5]
     return sha.new(salt+self.user.email).hexdigest()
 
-  def create_user_profile(sender, instance, created, **kwargs):
+  def create_djuser(sender, instance, created, **kwargs):
     if created:
       profile, created = User.objects.get_or_create(user=instance)
 
-  post_save.connect(create_user_profile, sender=DJUser)
+  post_save.connect(create_djuser, sender=DJUser)
 
   def to_dict(self, fields=None):
     userInfo = {}
