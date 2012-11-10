@@ -18,11 +18,12 @@ def NewUserJson(request):
     if not DJUser.objects.filter(email=email):
       if not fbemail or not User.objects.filter(fbemail=fbemail):
         try:
-          newDJUser = DJUser(first_name=first, last_name=last, email=email, password=password)
+          newDJUser = DJUser(username=email, first_name=first, last_name=last, email=email, password=password)
           newDJUser.save()
           newUser = User.objects.get(user=newDJUser)
           newUser.bday = bday
           newUser.fbemail = fbemail
+          newUser.apikey = newUser.generate_apikey()
           newUser.save()
           userInfo = newUser.to_dict()
         except:

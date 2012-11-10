@@ -1,3 +1,5 @@
+import random, sha
+
 from django.db import models
 from django.contrib.auth.models import User as DJUser
 from django.db.models.signals import post_save
@@ -9,6 +11,11 @@ class User(models.Model):
   user     = models.OneToOneField(DJUser)
   bday     = models.DateField(blank=True, null=True)
   fbemail  = models.EmailField(unique=True, null=True, blank=True)
+  apikey   = models.CharField(max_length=40)
+
+  def generate_apikey(self):
+    salt = sha.new(str(random.random())).hexdigest()[:5]
+    return sha.new(salt+self.user.email).hexdigest()
 
   def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -30,6 +37,8 @@ class User(models.Model):
       userInfo["email"] = self.user.email
     if not fields or "fbemail" in fields:
       userInfo["fbemail"] = self.fbemail
+    if not fields or "apikey" in fields:
+      userInfo["apikey"] = self.apikey
     
     return userInfo
 
