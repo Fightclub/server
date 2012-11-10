@@ -14,6 +14,28 @@ class User(models.Model):
   apikey   = models.CharField(max_length=40)
 
   @classmethod
+  def create(cls, data):
+    if "email" in data and data["email"] and \
+       "first" in data and data["first"] and \
+       "last" in data and data["last"] and \
+       "password" in data and data["password"]:
+      if not DJUser.objects.filter(email=data["email"]):
+        if not ("fbemail" in data and data["fbemail"]) or not User.objects.filter(fbemail=data["fbemail"]):
+          newDJUser = DJUser(username=data["email"], first_name=data["first"], last_name=data["last"], email=data["email"])
+          newDJUser.set_password(data["password"])
+          newDJUser.save()
+          newUser = User.objects.get(user=newDJUser)
+          newUser.bday = data["bday"] if "bday" in data and data["bday"] else None
+          newUser.fbemail = data["fbemail"] if "fbemail" in data and data["fbemail"] else None
+          newUser.apikey = newUser.generate_apikey()
+          newUser.save()
+        else:
+          raise Exception("Facebook account already associated")
+      else:
+        raise Exception("Email already used")
+      return newUser
+
+  @classmethod
   def select(cls, email=None, fbemail=None, id=None, apikey=None):
     user = None
     if id:
