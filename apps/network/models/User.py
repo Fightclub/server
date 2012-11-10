@@ -33,7 +33,9 @@ class User(models.Model):
           raise Exception("Facebook account already associated")
       else:
         raise Exception("Email already used")
-      return newUser
+    else:
+      raise Exception("Required fields missing")
+    return newUser
 
   @classmethod
   def select(cls, email=None, fbemail=None, id=None, apikey=None):
