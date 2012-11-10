@@ -19,6 +19,12 @@ def NewGiftJson(request):
     if sender:
       if receiver_id:
         recipient = User.select(id=receiver_id)
+      else:
+        try:
+          recipient = User.select(email=receiver_email)
+        except User.DoesNotExist:
+          # create dummy user for non-registered user here
+          giftInfo = {"error": "Recipient is not a member yet"}
       if recipient and sender != recipient:
         try:
           product = Product.objects.get(id=product_id)
