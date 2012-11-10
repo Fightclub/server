@@ -15,6 +15,8 @@ class Gift(models.Model):
 
   def to_dict(self, fields=None):
     giftInfo = {}
+    if not fields or "id" in fields:
+      giftInfo["id"] = self.id
     if not fields or "sender" in fields:
       giftInfo["sender"] = self.sender.to_dict(fields=["first", "last", "id"])
     if not fields or "receiver" in fields:
