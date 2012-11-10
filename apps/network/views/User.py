@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.utils import simplejson as json
+from django.core.serializers.json import DjangoJSONEncoder
 
 from django.contrib.auth.models import User as DJUser
 from apps.network.models import User
@@ -31,5 +32,5 @@ def NewUserJson(request):
         userInfo = {"error": "Facebook account already associated"}
     else:
       userInfo = {"error": "Email already used"}
-  return HttpResponse(json.dumps(userInfo))
+  return HttpResponse(json.dumps(userInfo, cls=DjangoJSONEncoder))
 
