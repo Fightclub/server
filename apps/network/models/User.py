@@ -14,11 +14,16 @@ class User(models.Model):
   apikey   = models.CharField(max_length=40)
 
   @classmethod
-  def select(cls, email=None, fbemail=None, id=None):
+  def select(cls, email=None, fbemail=None, id=None, apikey=None):
     user = None
     if id:
       try:
         user = cls.objects.get(id=id)
+      except:
+        pass
+    elif apikey:
+      try:
+        user = cls.objects.get(apikey=apikey)
       except:
         pass
     elif email:
@@ -29,7 +34,7 @@ class User(models.Model):
         pass
     elif fbemail:
       try:
-        user = User.objects.get(fbemail=fbemail)
+        user = cls.objects.get(fbemail=fbemail)
       except:
         pass
     return user
