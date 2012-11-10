@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.utils import simplejson as json
 
+from django.contrib.auth.models import User as DJUser
 from apps.network.models import User
 
 def NewUserJson(request):
@@ -12,11 +13,16 @@ def NewUserJson(request):
   last = data.get("last", None)
   bday = data.get("bday", None)
   password = data.get("password", None)
+
   if email and first and last and password:
-    if not User.objects.filter(email=email):
-      if not fbemail or not User.objects.filter(fbemail):
+    if not DJUser.objects.filter(email=email):
+      if not fbemail or not User.objects.filter(fbemail=fbemail):
         try:
-          newUser = User(first=first, last=last, bday=bday, email=email, fbemail=fbemail, password=password)
+          newDJUser = DJUser(first_name=first, last_name=last, email=email, password=password)
+          newDJUser.save()
+          newUser = User.objects.get(user=newDJUser)
+          newUser.bday = bday
+          newUser.fbemail = fbemail
           newUser.save()
           userInfo = newUser.to_dict()
         except:
