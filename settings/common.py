@@ -116,6 +116,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'apps.catalog',
     'apps.network',
+    'apps.payment',
 )
 
 # A sample logging configuration. The only tangible logging
