@@ -3,9 +3,14 @@ from django.db import models
 from apps.catalog.models import Vendor
 from apps.network.models import User
 
+import StarbucksCard
+
+CARD_CLASSES = {
+  "Starbucks": StarbucksCard
+}
+
 class Card(models.Model):
   class Meta:
-    abstract = True
     app_label = "payment"
     db_table = "payment_cards"
   
@@ -14,6 +19,16 @@ class Card(models.Model):
   value    = models.DecimalField(max_digits=5, decimal_places=2)
   vendor   = models.ForeignKey(Vendor)
   user     = models.ForeignKey(User, null=True, blank=True)
+  
+  redemptionImage = models.URLField()
+  barcodeImage    = models.URLField()
+
+
+  def ProxyCard(self):
+    if self.vendor.name in CARD_CLASSES:
+      return CARD_CLASSES[self.vendor.name].objects.get(self.id)
+    else:
+      return None
 
   def RetrieveBalance(self):
     raise NotImplementedError("RetrieveBalance not implemented")
@@ -22,4 +37,4 @@ class Card(models.Model):
     raise NotImplementedError("SetBalance not implemented")
 
   def __unicode__(self):
-    raise NotImplementedError("__unicode__ not implemented")
+    return "%s: %s" % (self.vendor.name, self.cardID)
