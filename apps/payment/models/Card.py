@@ -1,5 +1,7 @@
 from django.db import models
+
 from apps.catalog.models import Vendor
+from apps.network.models import User
 
 class Card(models.Model):
   class Meta:
@@ -11,7 +13,7 @@ class Card(models.Model):
   cardID   = models.CharField(max_length=64)
   value    = models.DecimalField(max_digits=5, decimal_places=2)
   vendor   = models.ForeignKey(Vendor)
-  # TODO: once we have a notion of "users" we should add a user mapping here
+  user     = models.ForeignKey(User, null=True, blank=True)
 
   def RetrieveBalance(self):
     raise NotImplementedError("RetrieveBalance not implemented")
