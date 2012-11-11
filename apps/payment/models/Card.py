@@ -3,12 +3,6 @@ from django.db import models
 from apps.catalog.models import Vendor
 from apps.network.models import User
 
-import StarbucksCard
-
-CARD_CLASSES = {
-  "Starbucks": StarbucksCard
-}
-
 class Card(models.Model):
   class Meta:
     app_label = "payment"
@@ -24,9 +18,14 @@ class Card(models.Model):
   barcodeImage    = models.URLField()
 
 
-  def ProxyCard(self):
+  def ProxyCard(self):    
+    from StarbucksCard import StarbucksCard
+
+    CARD_CLASSES = {
+      "Starbucks": StarbucksCard
+    }
     if self.vendor.name in CARD_CLASSES:
-      return CARD_CLASSES[self.vendor.name].objects.get(self.id)
+      return CARD_CLASSES[self.vendor.name].objects.get(id=self.id)
     else:
       return None
 
