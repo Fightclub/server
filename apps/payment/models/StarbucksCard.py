@@ -7,12 +7,12 @@ import mechanize, os
 from bs4 import BeautifulSoup
 
 class StarbucksCard(Card):
+  class Meta:
+    proxy = True
+
   username = os.environ.get("FC_STARBUCKS_USERNAME")
   password = os.environ.get("FC_STARBUCKS_PASSWORD")
   masterID = os.environ.get("FC_STARBUCKS_MASTERID")
-
-  redemptionImage = models.URLField()
-  barcodeImage    = models.URLField()
 
   cardManagerURL = "https://www.starbucks.com/account/card"
   transferFundsURL = "https://www.starbucks.com/account/card/transfer"
@@ -84,5 +84,3 @@ class StarbucksCard(Card):
       StarbucksCard.TransferFunds(self.cardID, StarbucksCard.masterID, currentBalance-balance)
     self.balance = balance
 
-  def __unicode__(self):
-    return "%s: %s" % (self.vendor.name, self.cardID)
