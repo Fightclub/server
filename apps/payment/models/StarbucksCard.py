@@ -11,6 +11,9 @@ class StarbucksCard(Card):
   password = os.environ.get("FC_STARBUCKS_PASSWORD")
   masterID = os.environ.get("FC_STARBUCKS_MASTERID")
 
+  redemptionImage = models.URLField()
+  barcodeImage    = models.URLField()
+
   cardManagerURL = "https://www.starbucks.com/account/card"
   transferFundsURL = "https://www.starbucks.com/account/card/transfer"
   browser = mechanize.Browser(
