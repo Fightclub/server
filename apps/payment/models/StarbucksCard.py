@@ -82,5 +82,5 @@ class StarbucksCard(Card):
       StarbucksCard.TransferFunds(StarbucksCard.masterID, self.cardID, balance-currentBalance)
     elif currentBalance > balance:
       StarbucksCard.TransferFunds(self.cardID, StarbucksCard.masterID, currentBalance-balance)
-    self.balance = balance
-
+    self.value = balance
+    self.save()
