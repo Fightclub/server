@@ -40,3 +40,22 @@ def NewGiftJson(request):
   
   return HttpResponse(json.dumps(giftInfo, cls=DjangoJSONEncoder))
 
+def RedeemGiftJson(request):
+  data = request.GET
+  redemptionInfo = {}
+  
+  apikey = data.get("apikey", None)
+  giftid = data.get("gift", None)
+
+  if apikey and giftid:
+    recipient = User.select(apikey=apikey)
+    if recipient:
+      gift = Gift.objects.get(id=giftid)
+      if gift and gift.receiver == recipient:
+        gift.Redeem()
+      else:
+        redemptionInfo = {"error": "Invalid gift"}
+    else:
+      redemptionInfo = {"error": "Invalid apikey"}
+
+  return HttpResponse(json.dumps(redemptionInfo, cls=DjangoJSONEncoder))
