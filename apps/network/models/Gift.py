@@ -7,7 +7,7 @@ from apps.payment.models import Card
 from datetime import datetime, timedelta
 from django.utils.timezone import utc
 
-#import django_rq as rq
+import django_rq as rq
 
 class Gift(models.Model):
   class Meta:
@@ -36,10 +36,10 @@ class Gift(models.Model):
     card = Card.Card.objects.filter(vendor=self.product.vendor, user=None)[:1]
     if card:
       card = card[0]
-      #queue = rq.get_queue('high')
-      #load = queue.enqueue(Card.SetBalance, card.id, self.product.price)
-      #scheduler = rq.get_scheduler('low')
-      #unload = scheduler.enqueue_in(timedelta(minutes=5), Card.SetBalance, card.id, 0)
+      queue = rq.get_queue('high')
+      load = queue.enqueue(Card.SetBalance, card.id, self.product.price)
+      scheduler = rq.get_scheduler('low')
+      unload = scheduler.enqueue_in(timedelta(minutes=5), Card.SetBalance, card.id, 0)
       self.activated = datetime.utcnow().replace(tzinfo=utc)
       self.status = self.GIFT_STATUS_ACTIVE
       self.save()
