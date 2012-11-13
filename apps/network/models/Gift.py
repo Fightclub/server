@@ -7,6 +7,8 @@ from apps.payment.models import Card
 from datetime import datetime
 from django.utils.timezone import utc
 
+import django_rq as rq
+
 class Gift(models.Model):
   class Meta:
     app_label = "network"
@@ -31,8 +33,10 @@ class Gift(models.Model):
   redeemed = models.DateTimeField(null=True, blank=True)
 
   def Redeem(self):
-    card = Card.objects.filter(vendor=self.product.vendor, user=None)[:1]
+    card = Card.Card.objects.filter(vendor=self.product.vendor, user=None)[:1]
     if card:
+      card = card[0]
+      rq.enqueue(Card.SetBalance, card.id, self.product.price)
       self.activated = datetime.utcnow().replace(tzinfo=utc)
       self.status = self.GIFT_STATUS_ACTIVE
       self.save()
