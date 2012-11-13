@@ -9,6 +9,8 @@ if __name__ == "__main__":
     else:
         if fc_env.lower() == "dev":
             os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.development")
+        elif fc_env.lower() == "heroku-alpha":
+            os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.heroku-alpha")
         elif fc_env.lower() == "heroku-beta":
             os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.heroku-beta")
         elif fc_env.lower() == "heroku-production":
