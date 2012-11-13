@@ -37,3 +37,12 @@ class Card(models.Model):
 
   def __unicode__(self):
     return "%s: %s" % (self.vendor.name, self.cardID)
+
+def RetrieveBalance(cardID):
+  proxy = Card.objects.get(id=cardID).ProxyCard()
+  return proxy.RetrieveBalance()
+
+def SetBalance(cardID, balance):
+  proxy = Card.objects.get(id=cardID).ProxyCard()
+  return proxy.SetBalance(balance)
+
