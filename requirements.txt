@@ -2,3 +2,6 @@ Django==1.4.1
 psycopg2==2.4.5
 mechanize==0.2.5
 beautifulsoup4==4.1.3
+redis==2.7.1
+rq==0.3.2
+rq-scheduler==0.3.2

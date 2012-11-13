@@ -7,9 +7,11 @@ import mechanize, os
 from bs4 import BeautifulSoup
 
 class StarbucksCard(Card):
+  class Meta:
+    proxy = True
+
   username = os.environ.get("FC_STARBUCKS_USERNAME")
   password = os.environ.get("FC_STARBUCKS_PASSWORD")
-  masterID = os.environ.get("FC_STARBUCKS_MASTERID")
 
   cardManagerURL = "https://www.starbucks.com/account/card"
   transferFundsURL = "https://www.starbucks.com/account/card/transfer"
@@ -75,11 +77,10 @@ class StarbucksCard(Card):
 
   def SetBalance(self, balance):
     currentBalance = self.RetrieveBalance()
+    masterCard = Card.objects.get(cardID="816375FC93D81EAE")
     if currentBalance < balance:
-      StarbucksCard.TransferFunds(StarbucksCard.masterID, self.cardID, balance-currentBalance)
+      StarbucksCard.TransferFunds(masterCard.cardID, self.cardID, balance-currentBalance)
     elif currentBalance > balance:
-      StarbucksCard.TransferFunds(self.cardID, StarbucksCard.masterID, currentBalance-balance)
-    self.balance = balance
-
-  def __unicode__(self):
-    return "%s: %s" % (self.vendor.name, self.cardID)
+      StarbucksCard.TransferFunds(self.cardID, masterCard.cardID, currentBalance-balance)
+    self.value = balance
+    self.save()

@@ -117,7 +117,26 @@ INSTALLED_APPS = (
     'apps.catalog',
     'apps.network',
     'apps.payment',
+    'django_rq',
 )
+
+RQ_QUEUES = {
+    'default': {
+      'HOST': 'localhost',
+      'PORT': 6379,
+      'DB': 0,
+    },
+    'high': {
+      'HOST': 'localhost',
+      'PORT': 6379,
+      'DB': 0,
+    },
+    'low': {
+      'HOST': 'localhost',
+      'PORT': 6379,
+      'DB': 0,
+    }
+}
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
