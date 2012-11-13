@@ -44,5 +44,5 @@ def RetrieveBalance(cardID):
 
 def SetBalance(cardID, balance):
   proxy = Card.objects.get(id=cardID).ProxyCard()
-  return proxy.SetBalance(balance)
+  return proxy.SetBalance(float(balance))
 
