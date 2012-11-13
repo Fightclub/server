@@ -35,4 +35,4 @@ class ProductTest(TestCase):
 
   def test_view_productCategory_json(self):
     response = self.c.get('/catalog/a/product/category', {'id': 1})
-    self.assertEqual(response.content, "{\"icon\": \"category icon path\", \"products\": [{\"icon\": \"product icon\", \"vendor\": {\"id\": 1, \"name\": \"Test Vendor\"}, \"id\": 1, \"name\": \"Test Product\"}], \"id\": 1, \"name\": \"Test Category\"}")
+    self.assertEqual(response.content, "{\"icon\": \"category icon path\", \"products\": [{\"icon\": \"product icon\", \"vendor\": {\"icon\": \"test vendor icon\", \"id\": 1, \"name\": \"Test Vendor\"}, \"id\": 1, \"name\": \"Test Product\"}], \"id\": 1, \"name\": \"Test Category\"}")
