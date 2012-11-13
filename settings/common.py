@@ -117,7 +117,7 @@ INSTALLED_APPS = (
     'apps.catalog',
     'apps.network',
     'apps.payment',
-    'django_rq',
+    #'django_rq',
 )
 
 RQ_QUEUES = {
