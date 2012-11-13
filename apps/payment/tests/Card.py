@@ -8,12 +8,16 @@ class CardTest(TestCase):
   def setUpClass(cls):
     cls.testVendor = Vendor(name="Starbucks", icon="https://www.starbucks.com/static/images/global/logo.png")
     cls.testVendor.save()
+    cls.masterCard = Card.Card(name="Fightclub-001", cardID="816375FC93D81EAE", value=0.0, vendor=cls.testVendor, master=True)
     cls.testCard = Card.Card(name="TestCard", cardID="8C6272FB99D71A", value=0.0, vendor=cls.testVendor)
+    cls.masterCard.save()
     cls.testCard.save()
 
   @classmethod
   def tearDownClass(cls):
     Card.SetBalance(CardTest.testCard.id, 0.0)
+    CardTest.testCard.delete()
+    CardTest.masterCard.delete()
 
   def test_model_card_RetrieveValue(self):
     self.assertEqual(Card.RetrieveBalance(CardTest.testCard.id), 0.0)

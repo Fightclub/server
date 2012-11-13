@@ -13,6 +13,7 @@ class Card(models.Model):
   value    = models.DecimalField(max_digits=5, decimal_places=2)
   vendor   = models.ForeignKey(Vendor)
   user     = models.ForeignKey(User, null=True, blank=True)
+  master   = models.BooleanField(default=False)
   
   redemptionImage = models.URLField()
   barcodeImage    = models.URLField()

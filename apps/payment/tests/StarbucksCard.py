@@ -8,7 +8,9 @@ class StarbucksCardTest(TestCase):
   def setUpClass(cls):
     cls.testVendor = Vendor(name="Starbucks", icon="https://www.starbucks.com/static/images/global/logo.png")
     cls.testVendor.save()
+    cls.masterCard = StarbucksCard(name="Fightclub-001", cardID="816375FC93D81EAE", value=0.0, vendor=cls.testVendor, master=True)
     cls.testCard = StarbucksCard(name="TestCard", cardID="8C6272FB99D71A", value=0.0, vendor=cls.testVendor)
+    cls.masterCard.save()
     cls.testCard.save()
 
   @classmethod
