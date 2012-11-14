@@ -53,7 +53,7 @@ def RedeemGiftJson(request):
     recipient = User.select(apikey=apikey)
     if recipient:
       gift = Gift.objects.get(id=giftid)
-      if gift and gift.receiver == recipient:
+      if gift and gift.receiver == recipient and gift.status != Gift.GIFT_STATUS_REDEEMED:
         card, expires = gift.Redeem()
         if card:
           redemptionInfo={
@@ -62,6 +62,8 @@ def RedeemGiftJson(request):
               "product": gift.product.to_dict(fields=["id", "name", "icon"]),
               "sender": gift.sender.to_dict(fields=["first", "last", "id"]),
           }
+      elif gift.status == Gift.GIFT_STATUS_REDEEMED:
+        redemptionInfo = {"error": "You have already redeemed this gift"}
       else:
         redemptionInfo = {"error": "Invalid gift"}
     else:

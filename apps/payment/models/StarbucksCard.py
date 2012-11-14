@@ -90,6 +90,9 @@ class StarbucksCard(Card):
       masterCard.save()
       self.save()
       StarbucksCard.TransferFunds(self.cardID, masterCard.cardID, currentBalance-balance)
+    elif currentBalance == balance:
+      self.value = balance
+      self.save()
 
   def RedemptionInfo(self):
     redemptionInfo = {
