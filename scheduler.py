@@ -10,4 +10,4 @@ command = "python %s -H %s -p %s" % (rqscheduler, redisurl.hostname, redisurl.po
 
 if redisurl.password:
   command += " -P " + redisurl.password
-os.system(command + " &")
+os.system(command)
