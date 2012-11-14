@@ -36,6 +36,9 @@ class Card(models.Model):
   def SetBalance(self, value):
     raise NotImplementedError("SetBalance not implemented")
 
+  def RedemptionInfo(self):
+    raise NotImplementedError("RedemptionInfo not implemented")
+
   def __unicode__(self):
     return "%s: %s" % (self.vendor.name, self.cardID)
 

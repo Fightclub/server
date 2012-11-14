@@ -84,3 +84,10 @@ class StarbucksCard(Card):
       StarbucksCard.TransferFunds(self.cardID, masterCard.cardID, currentBalance-balance)
     self.value = balance
     self.save()
+
+  def RedemptionInfo(self):
+    redemptionInfo = {
+        "barcode": self.barcodeImage
+    }
+    return redemptionInfo
+

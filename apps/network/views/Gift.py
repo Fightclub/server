@@ -6,6 +6,8 @@ from apps.catalog.models import Product
 from apps.network.models import Gift
 from apps.network.models import User
 
+from datetime import datetime, timedelta
+
 def NewGiftJson(request):
   data = request.GET
   giftInfo = {}
@@ -52,10 +54,18 @@ def RedeemGiftJson(request):
     if recipient:
       gift = Gift.objects.get(id=giftid)
       if gift and gift.receiver == recipient:
-        gift.Redeem()
+        card, expires = gift.Redeem()
+        if card:
+          redemptionInfo={
+              "redemptionInfo": card.ProxyCard().RedemptionInfo(),
+              "expires": expires,
+              "product": gift.product.to_dict(fields=["id", "name", "icon"]),
+              "sender": gift.sender.to_dict(fields=["first", "last", "id"]),
+          }
       else:
         redemptionInfo = {"error": "Invalid gift"}
     else:
       redemptionInfo = {"error": "Invalid apikey"}
 
   return HttpResponse(json.dumps(redemptionInfo, cls=DjangoJSONEncoder))
+
