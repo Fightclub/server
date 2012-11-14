@@ -62,6 +62,10 @@ def RedeemGiftJson(request):
               "product": gift.product.to_dict(fields=["id", "name", "icon"]),
               "sender": gift.sender.to_dict(fields=["first", "last", "id"]),
           }
+        else:
+          redemptionInfo = {
+              "error": "A payment barcode could not be generated at this time, please try again later"
+          }
       elif gift.status == Gift.GIFT_STATUS_REDEEMED:
         redemptionInfo = {"error": "You have already redeemed this gift"}
       else:

@@ -35,7 +35,10 @@ class Gift(models.Model):
 
   def Redeem(self):
     if self.status == Gift.GIFT_STATUS_CREATED:
-      card = Card.Card.objects.filter(vendor=self.product.vendor, user=None, master=False)[:1]
+      try:
+        card = Card.Card.objects.filter(vendor=self.product.vendor, user=None, master=False)[:1]
+      except Card.Card.DoesNotExist:
+        card = None
       expireTimeUTC = None
       if card:
         card = card[0]
@@ -44,8 +47,8 @@ class Gift(models.Model):
         queue = rq.get_queue('high')
         load = queue.enqueue(Card.SetBalance, card.id, self.product.price)
         scheduler = rq.get_scheduler('low')
-        expireTimeUTC = datetime.utcnow() + timedelta(seconds=30)
-        expireTime = datetime.now() + timedelta(seconds=30)
+        expireTimeUTC = datetime.utcnow() + timedelta(minutes=5)
+        expireTime = datetime.now() + timedelta(minutes=5)
         unload = scheduler.enqueue_at(expireTime, CheckRedemption, self.id)
         self.activated = datetime.utcnow().replace(tzinfo=utc)
         self.status = self.GIFT_STATUS_ACTIVE
@@ -53,7 +56,7 @@ class Gift(models.Model):
         self.save()
     elif self.status == Gift.GIFT_STATUS_ACTIVE:
       card = self.payment
-      expireTimeUTC = self.activated + timedelta(seconds=30)
+      expireTimeUTC = self.activated + timedelta(minutes=5)
     return (card, expireTimeUTC)
 
   def to_dict(self, fields=None):
