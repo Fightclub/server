@@ -39,7 +39,7 @@ class Gift(models.Model):
       queue = rq.get_queue('high')
       load = queue.enqueue(Card.SetBalance, card.id, self.product.price)
       scheduler = rq.get_scheduler('low')
-      expireTime = datetime.now() + timedelta(minutes=5)
+      expireTime = datetime.utcnow() + timedelta(minutes=5)
       unload = scheduler.enqueue_at(expireTime, Card.SetBalance, card.id, 0)
       self.activated = datetime.utcnow().replace(tzinfo=utc)
       self.status = self.GIFT_STATUS_ACTIVE
