@@ -31,20 +31,25 @@ class Gift(models.Model):
   created  = models.DateTimeField(auto_now=True)
   activated = models.DateTimeField(null=True, blank=True)
   redeemed = models.DateTimeField(null=True, blank=True)
+  payment  = models.ForeignKey(Card.Card, null=True, blank=True)
 
   def Redeem(self):
     card = Card.Card.objects.filter(vendor=self.product.vendor, user=None, master=False)[:1]
     if card:
       card = card[0]
+      card.user = self.receiver
+      card.save()
       queue = rq.get_queue('high')
       load = queue.enqueue(Card.SetBalance, card.id, self.product.price)
       scheduler = rq.get_scheduler('low')
-      expireTime = datetime.utcnow() + timedelta(minutes=5)
+      expireTimeUTC = datetime.utcnow() + timedelta(minutes=5)
+      expireTime = datetime.now() + timedelta(minutes=5)
       unload = scheduler.enqueue_at(expireTime, Card.SetBalance, card.id, 0)
       self.activated = datetime.utcnow().replace(tzinfo=utc)
       self.status = self.GIFT_STATUS_ACTIVE
+      self.payment = card
       self.save()
-    return (card, expireTime)
+    return (card, expireTimeUTC)
 
   def to_dict(self, fields=None):
     giftInfo = {}
