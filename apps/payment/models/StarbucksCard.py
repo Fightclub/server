@@ -54,7 +54,6 @@ class StarbucksCard(Card):
     StarbucksCard.StarbucksLogin()
     fromAmount = StarbucksCard.StarbucksBalance(fromCard)
     if amount > fromAmount:
-      print "no sufficient funds"
       raise Exception("Card does not have sufficient funds")
     else:
       transferOriginResponse = StarbucksCard.browser.open(StarbucksCard.transferFundsURL)
@@ -77,10 +76,18 @@ class StarbucksCard(Card):
 
   def SetBalance(self, balance):
     currentBalance = self.RetrieveBalance()
-    masterCard = Card.objects.get(cardID="816375FC93D81EAE")
+    masterCard = StarbucksCard.objects.get(master=True)
+    masterValue = float(masterCard.value)
     if currentBalance < balance:
+      masterCard.value = masterValue - (balance-currentBalance)
+      self.value = balance
+      masterCard.save()
+      self.save()
       StarbucksCard.TransferFunds(masterCard.cardID, self.cardID, balance-currentBalance)
     elif currentBalance > balance:
+      masterCard.value = masterValue + (currentBalance-balance)
+      self.value = balance
+      masterCard.save()
+      self.save()
       StarbucksCard.TransferFunds(self.cardID, masterCard.cardID, currentBalance-balance)
-    self.value = balance
-    self.save()
+

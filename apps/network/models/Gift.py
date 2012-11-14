@@ -33,7 +33,7 @@ class Gift(models.Model):
   redeemed = models.DateTimeField(null=True, blank=True)
 
   def Redeem(self):
-    card = Card.Card.objects.filter(vendor=self.product.vendor, user=None)[:1]
+    card = Card.Card.objects.filter(vendor=self.product.vendor, user=None, master=False)[:1]
     if card:
       card = card[0]
       queue = rq.get_queue('high')
