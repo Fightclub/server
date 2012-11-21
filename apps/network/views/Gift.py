@@ -59,7 +59,7 @@ def RedeemGiftJson(request):
           redemptionInfo={
               "redemptionInfo": card.ProxyCard().RedemptionInfo(),
               "expires": expires,
-              "product": gift.product.to_dict(fields=["id", "name", "icon"]),
+              "product": gift.product.to_dict(fields=["id", "name", "icon", "vendor"]),
               "sender": gift.sender.to_dict(fields=["first", "last", "id"]),
           }
         else:
