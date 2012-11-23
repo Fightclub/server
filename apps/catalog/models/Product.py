@@ -33,7 +33,7 @@ class Product(models.Model):
     if not fields or "category" in fields:
       productInfo["categories"] = []
       for category in self.category.all():
-        productInfo["categories"].append(category.to_dict(["id", "name"]))
+        productInfo["categories"].append(category.to_dict(["id", "name", "icon"]))
 
     return productInfo
 
