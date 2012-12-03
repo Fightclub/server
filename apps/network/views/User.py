@@ -6,6 +6,20 @@ from django.contrib.auth.models import User as DJUser
 from apps.network.models import User
 from apps.network.models import Gift
 
+def GetUserJson(request):
+  data = request.GET
+  reqEmail = data.get("email", None)
+  requid = data.get("id", None)
+  userInfo = {}
+  if reqEmail:
+    user = User.select(email=reqEmail)
+  elif requid:
+    user = User.select(id=requid)
+  if user:
+    userInfo = user.to_dict(fields=["first", "last", "id"])
+
+  return HttpResponse(json.dumps(userInfo, cls=DjangoJSONEncoder))
+
 def NewUserJson(request):
   data = request.GET
   userInfo = {}
