@@ -11,6 +11,7 @@ class Product(models.Model):
   descr    = models.TextField()
   category = models.ManyToManyField(ProductCategory)
   icon     = models.URLField()
+  banner   = models.URLField(null=True, blank=True)
   vendor   = models.ForeignKey("Vendor")
 
   def to_dict(self, fields=None):
@@ -27,6 +28,9 @@ class Product(models.Model):
       productInfo["description"] = self.descr
     if not fields or "icon" in fields:
       productInfo["icon"] = self.icon
+    if not fields or "icon" in fields:
+      if self.banner and self.banner != "":
+        productInfo["banner"] = self.banner
     if not fields or "vendor" in fields:
       productInfo["vendor"] = self.vendor.to_dict(["id", "name", "icon"])
     
