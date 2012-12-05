@@ -65,9 +65,9 @@ def ListUserGiftJson(request):
       giftInfo["received"] = []
       giftInfo["sent"] = []
       for gift in user.received.all():
-        giftInfo["received"].append(gift.to_dict(fields=["id", "product"]))
+        giftInfo["received"].append(gift.to_dict(fields=["id", "product", "sender", "receiver"]))
       for gift in user.sent.all():
-        giftInfo["sent"].append(gift.to_dict(fields=["id", "product"]))
+        giftInfo["sent"].append(gift.to_dict(fields=["id", "product", "sender", "receiver"]))
     else:
       giftInfo = {"error": "Bad apikey"}
   return HttpResponse(json.dumps(giftInfo, cls=DjangoJSONEncoder))
