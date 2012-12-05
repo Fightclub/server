@@ -68,7 +68,7 @@ class Gift(models.Model):
     if not fields or "receiver" in fields:
       giftInfo["receiver"] = self.receiver.to_dict(fields=["first", "last", "id"])
     if not fields or "product" in fields:
-      giftInfo["product"] = self.product.to_dict(fields=["name", "icon", "vendor"])
+      giftInfo["product"] = self.product.to_dict(fields=["id", "name", "icon", "vendor"])
     if not fields or "created" in fields:
       giftInfo["created"] = self.created
     if not fields or "redeemed" in fields:
