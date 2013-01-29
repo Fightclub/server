@@ -61,6 +61,7 @@ def RedeemGiftJson(request):
               "expires": expires,
               "product": gift.product.to_dict(fields=["id", "name", "icon", "vendor"]),
               "sender": gift.sender.to_dict(fields=["first", "last", "id"]),
+              "id": giftid,
           }
         else:
           redemptionInfo = {
